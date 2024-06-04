@@ -1,0 +1,17 @@
+# vim: set syntax=python ts=4 sw=4:
+
+
+
+## Url which will return external IP as text
+ip_get_url = 'https://nailyk.fr/ip.php'
+## Gandi Personal Access Token https://docs.gandi.net/en/managing_an_organization/organizations/personal_access_token.html#create-a-token
+dns_api_key = 'xxx'
+## Gandi API
+dns_api_url = 'https://api.gandi.net/v5'
+## Domain name
+domain_name = 'nailyk.fr'
+## Record name to update
+domain_record_name = 'dynamic'
+## Gandi minimum TTL / Will set the record TTL to this value
+min_ttl = 300
+
