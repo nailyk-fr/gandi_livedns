@@ -1,6 +1,7 @@
 import json
 import requests
 import socket
+import sys
 ## import config file :
 import dns_config
 
@@ -8,19 +9,34 @@ headers = {"Authorization": "Bearer " + dns_config.dns_api_key}
 url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_config.domain_name, dns_config.domain_record_name)
 
 debug = False
+color = True
+
+class bcolors:
+    if color:
+       OKCYAN = '\033[96m'
+       OKGREEN = '\033[92m'
+       WARNING = '\033[93m'
+       FAIL = '\033[91m'
+       ENDC = '\033[0m'
+    else:
+       OKCYAN = ''
+       OKGREEN = ''
+       WARNING = ''
+       FAIL = ''
+       ENDC = ''
 
 def dbg_print(text):
     if debug:
-        print(text)
+        print(bcolors.OKCYAN + text + bcolors.ENDC)
 
 def info_print(text):
-    print(text)
+    print(bcolors.OKGREEN + text + bcolors.ENDC)
 
 def warn_print(text):
-    print(text)
+    print(bcolors.WARNING + text + bcolors.ENDC)
 
 def err_print(text):
-    print(text)
+    print(bcolors.FAIL + text + bcolors.ENDC, file=sys.stderr)
 
 def get_external_ip():
     try: 
