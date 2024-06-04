@@ -5,7 +5,7 @@ import socket
 import dns_config
 
 headers = {"Authorization": "Bearer " + dns_config.dns_api_key}
-url = dns_config.dns_api_url + "/livedns/domains/" + dns_config.domain_name + "/records/" + dns_config.domain_record_name
+url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_config.domain_name, dns_config.domain_record_name)
 
 debug = False
 
