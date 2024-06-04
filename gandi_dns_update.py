@@ -102,3 +102,5 @@ else:
   info_print("No IP change")
 
 info_print("All done.")
+sys.exit(0)
+
