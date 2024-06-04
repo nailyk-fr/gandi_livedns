@@ -10,17 +10,17 @@ url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_c
 debug = False
 
 def dbg_print(text):
-	if debug:
-		print(text)
+    if debug:
+        print(text)
 
 def info_print(text):
-	print(text)
+    print(text)
 
 def warn_print(text):
-	print(text)
+    print(text)
 
 def err_print(text):
-	print(text)
+    print(text)
 
 def get_external_ip():
     try: 
