@@ -61,6 +61,12 @@ def get_current_record():
         dbg_print("url: {0} and headers : {1}".format(url, headers))
         r = requests.get(url, headers=headers)
         dbg_print(r.text)
+        if r.status_code != 200:
+            err_print("Non 200 answer: {0}".format(str(r.status_code)))
+            err_print("Cannot proceed, exiting")
+            sys.exit(1)
+        else:
+            dbg_print("Status {0}, parsing answer".format(str(r.status_code)))
         r_json = json.loads(r.text)
         cur_ttl = r_json[0]['rrset_ttl']
         cur_ip = r_json[0]['rrset_values'][0]
