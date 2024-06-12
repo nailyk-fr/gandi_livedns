@@ -2,6 +2,7 @@ import json
 import requests
 import socket
 import sys
+import argparse
 ## import config file :
 import dns_config
 
@@ -11,6 +12,20 @@ url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_c
 debug = False
 nocolor = False
 
+
+# Instantiate the parser
+parser = argparse.ArgumentParser(description='Automatically retrieve public IP address and update Gandi Live DNS record.')
+
+# add arguments
+parser.add_argument('--debug', '-d', dest='debug', action='store_true', help='Enable debug output')
+parser.add_argument('--no-color', '-n', dest='nocolor', action='store_true', help='Disable color in output')
+
+# parse and store arguments
+args = parser.parse_args()
+nocolor = args.nocolor
+debug = args.debug
+
+# argument parsing should happen BEFORE creating the class, or the nocolor value will not match the command line argument
 class bcolors:
     if not nocolor:
        OKCYAN = '\033[96m'
