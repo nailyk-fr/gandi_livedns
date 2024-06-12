@@ -9,10 +9,10 @@ headers = {"Authorization": "Bearer " + dns_config.dns_api_key}
 url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_config.domain_name, dns_config.domain_record_name)
 
 debug = False
-color = True
+nocolor = False
 
 class bcolors:
-    if color:
+    if not nocolor:
        OKCYAN = '\033[96m'
        OKGREEN = '\033[92m'
        WARNING = '\033[93m'
