@@ -68,7 +68,8 @@ def get_external_ip():
         return False
 
     except requests.exceptions.RequestException:
-        print('Opnsense: HTTP Request failed')
+        print('HTTP Request to retrieve IP failed')
+        return False
 
 def get_current_record():
     try: 
