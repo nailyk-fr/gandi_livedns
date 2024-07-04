@@ -116,6 +116,10 @@ cur_ttl, cur_ip, http_ref = get_current_record()
 
 new_ip = get_external_ip()
 
+if not new_ip:
+  err_print("Invalid IP retrieved: {0}".format(str(new_ip))
+  sys.exit(1)
+
 if cur_ip != new_ip:
   warn_print("Ip changed, from {0} to {1}. Updating...".format(cur_ip, new_ip))
   set_ip(http_ref, dns_config.min_ttl, new_ip.split())
