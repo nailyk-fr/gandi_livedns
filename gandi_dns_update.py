@@ -11,6 +11,7 @@ url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_c
 
 debug = False
 nocolor = False
+my_dryrun = False
 
 
 # Instantiate the parser
@@ -19,11 +20,14 @@ parser = argparse.ArgumentParser(description='Automatically retrieve public IP a
 # add arguments
 parser.add_argument('--debug', '-d', dest='debug', action='store_true', help='Enable debug output')
 parser.add_argument('--no-color', '-n', dest='nocolor', action='store_true', help='Disable color in output')
+parser.add_argument('--dry-run', '-x', dest='my_dryrun', action='store_true', help='Do not push the IP to the API')
 
 # parse and store arguments
 args = parser.parse_args()
 nocolor = args.nocolor
 debug = args.debug
+my_dryrun = args.my_dryrun
+
 
 # argument parsing should happen BEFORE creating the class, or the nocolor value will not match the command line argument
 class bcolors:
@@ -123,7 +127,10 @@ if not new_ip:
 
 if cur_ip != new_ip:
   warn_print("Ip changed, from {0} to {1}. Updating...".format(cur_ip, new_ip))
-  set_ip(http_ref, dns_config.min_ttl, new_ip.split())
+  if not args.my_dryrun:
+      set_ip(http_ref, dns_config.min_ttl, new_ip.split())
+  else:
+      warn_print("Dry run enable, not calling API")
 else:
   info_print("No IP change")
 
