@@ -3,8 +3,31 @@ import requests
 import socket
 import sys
 import argparse
+from requests import adapters
+from urllib3.poolmanager import PoolManager
 ## import config file :
 import dns_config
+
+
+
+class InterfaceAdapter(adapters.HTTPAdapter):
+    def __init__(self, **kwargs):
+        self.iface = kwargs.pop('iface', None)
+        super(InterfaceAdapter, self).__init__(**kwargs)
+
+    def _socket_options(self):
+        if self.iface is None:
+            return []
+        else:
+            return [(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, self.iface)]
+
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = PoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            block=block,
+            socket_options=self._socket_options()
+        )
 
 headers = {"Authorization": "Bearer " + dns_config.dns_api_key}
 url = "{0}/livedns/domains/{1}/records/{2}".format(dns_config.dns_api_url, dns_config.domain_name, dns_config.domain_record_name)
@@ -59,7 +82,14 @@ def err_print(text):
 
 def get_external_ip():
     try: 
-        r = requests.get(dns_config.ip_get_url)
+        # s = requests.session()
+        # s.source_address=('100.65.3.173', 0)
+        # r = s.get(dns_config.ip_get_url)
+        s = requests.session()
+        for prefix in ('http://', 'https://'):
+            s.mount(prefix, InterfaceAdapter(iface=b'ppp0'))
+
+        r = s.get(dns_config.ip_get_url)
         if r.status_code == 200:
             response = r.text
         try:
