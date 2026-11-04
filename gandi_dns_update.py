@@ -89,9 +89,25 @@ def get_external_ip():
         for prefix in ('http://', 'https://'):
             s.mount(prefix, InterfaceAdapter(iface=b'ppp0'))
 
-        r = s.get(dns_config.ip_get_url)
+        # Force IPv4 for this request only
+        original_getaddrinfo = socket.getaddrinfo
+
+        def ipv4_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+            return original_getaddrinfo(
+                host, port, socket.AF_INET, type, proto, flags
+            )
+
+        socket.getaddrinfo = ipv4_getaddrinfo
+        try:
+            r = s.get(dns_config.ip_get_url, timeout=60)
+        finally:
+            socket.getaddrinfo = original_getaddrinfo
+
         if r.status_code == 200:
             response = r.text
+        else:
+            err_print("External IP endpoint returned HTTP status {0}".format(r.status_code))
+            return False
         try:
             socket.inet_aton(response)
             # legal
@@ -101,8 +117,8 @@ def get_external_ip():
             return False
         return False
 
-    except requests.exceptions.RequestException:
-        print('HTTP Request to retrieve IP failed')
+    except requests.exceptions.RequestException as e:
+        err_print("HTTP request to retrieve IP failed: {0}".format(e))
         return False
 
 def get_current_record():
